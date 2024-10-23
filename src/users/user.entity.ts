@@ -1,14 +1,19 @@
+import { Exclude } from "class-transformer"
 import { AfterInsert, AfterRemove, AfterUpdate, BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm"
 
 @Entity()
 export class User {
     @PrimaryGeneratedColumn()
     id: number
+
     @Column()
     name: string
+
     @Column()
     email: string
+
     @Column()
+    @Exclude()
     password: string
 
     @AfterInsert()
@@ -20,6 +25,7 @@ export class User {
     logUpdate() {
         console.log(`ID: ${this.id} telah diupdate`);
     }
+
     @AfterRemove()
     LogRemove() {
         // Id tidak terambil
