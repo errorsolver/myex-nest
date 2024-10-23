@@ -1,12 +1,13 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UsersService } from './users.service';
+import { UpdateUserDto } from './dtos/update-user.dto';
 
 @Controller('users')
 export class UsersController {
     constructor(private usersService: UsersService) { }
 
-    @Get('/:id')
+    @Get(':id')
     findUser(@Param('id') id: string) {
         return this.usersService.findOneBy(parseInt(id))
     }
@@ -24,7 +25,7 @@ export class UsersController {
         at replacement (C:\myex-nest\node_modules\sqlite3\lib\trace.js:25:27)
         at Statement.errBack (C:\myex-nest\node_modules\sqlite3\lib\sqlite3.js:15:21)
     */
-    @Get()
+    @Get('email')
     findAllUsersByEmail(@Query('email') email: string) {
         return this.usersService.findByEmail(email)
     }
@@ -32,5 +33,15 @@ export class UsersController {
     @Post()
     createUser(@Body() body: CreateUserDto) {
         return this.usersService.create(body.name, body.email, body.password)
+    }
+
+    @Patch(':id')
+    updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
+        return this.usersService.update(parseInt(id), body)
+    }
+
+    @Delete(':id')
+    removeUser(@Param('id') id: string) {
+        return this.usersService.remove(parseInt(id))
     }
 }

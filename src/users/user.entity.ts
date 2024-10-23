@@ -13,15 +13,16 @@ export class User {
 
     @AfterInsert()
     logInsert() {
-        console.log(`User ${this.name} id: ${this.id} telah dibuat`);
+        console.log(`ID: ${this.id} telah dibuat`);
     }
 
     @AfterUpdate()
     logUpdate() {
-        console.log(`User ${this.name} id: ${this.id} telah diupdate`);
+        console.log(`ID: ${this.id} telah diupdate`);
     }
     @AfterRemove()
     LogRemove() {
-        console.log(`User ${this.name} id: ${this.id} telah dihapus`);
+        // Id tidak terambil
+        console.log(`ID: ${this.id} telah dihapus`);
     }
 }
