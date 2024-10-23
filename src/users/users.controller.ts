@@ -2,25 +2,21 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query, UseInter
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
-import { SerializeInterceptor } from 'src/interceptors/serialize.interceptor';
 import { UserDto } from './dtos/user.dto';
+import { Serialize } from 'src/interceptors/serialize.interceptor';
 
 @Controller('users')
+@Serialize(UserDto)
 export class UsersController {
     constructor(private usersService: UsersService) { }
 
     @Get(':id')
-    @UseInterceptors(new SerializeInterceptor(UserDto))
     findUser(@Param('id') id: string) {
-        console.log('findUser');
-
         return this.usersService.findOneBy(parseInt(id))
     }
 
     @Get()
-    @UseInterceptors(new SerializeInterceptor(UserDto))
     findAllUsers() {
-        console.log('findAllUser');
         return this.usersService.find()
     }
 
