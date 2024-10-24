@@ -24,7 +24,7 @@ export class UsersController {
         at replacement (C:\myex-nest\node_modules\sqlite3\lib\trace.js:25:27)
         at Statement.errBack (C:\myex-nest\node_modules\sqlite3\lib\sqlite3.js:15:21)
     */
-    @Get()
+    @Get('email')
     findAllUsersByEmail(@Query('email') email: string) {
         return this.usersService.findByEmail(email)
     }
