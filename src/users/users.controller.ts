@@ -1,36 +1,36 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserDto } from './dtos/user.dto';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { User } from './user.entity';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('users')
 @Serialize(UserDto)
 export class UsersController {
     constructor(private usersService: UsersService) { }
 
+    @Get('email')
+    findAllUsersByEmail(@Query('email') email: string) {
+        console.log('findByEmail');
+
+        return this.usersService.findByEmail(email)
+    }
+
     @Get(':id')
     findUser(@Param('id') id: string) {
+        console.log(':id');
+
         return this.usersService.findOneBy(parseInt(id))
     }
 
     @Get()
     findAllUsers() {
+        console.log('findall');
         return this.usersService.find()
-    }
-
-    // Error
-    /*
-        [Nest] ERROR [ExceptionsHandler] SQLITE_ERROR: no such column: NaN
-        QueryFailedError: SQLITE_ERROR: no such column: NaN
-        at handler (C:\myex-nest\node_modules\typeorm\driver\src\driver\sqlite\SqliteQueryRunner.ts:135:29)
-        at replacement (C:\myex-nest\node_modules\sqlite3\lib\trace.js:25:27)
-        at Statement.errBack (C:\myex-nest\node_modules\sqlite3\lib\sqlite3.js:15:21)
-    */
-    @Get('email')
-    findAllUsersByEmail(@Query('email') email: string) {
-        return this.usersService.findByEmail(email)
     }
 
     @Post()
@@ -46,5 +46,11 @@ export class UsersController {
     @Delete(':id')
     removeUser(@Param('id') id: string) {
         return this.usersService.remove(parseInt(id))
+    }
+
+    @Get('auth/current-user')
+    @UseGuards(AuthGuard)
+    currentUser(@CurrentUser() user: User) {
+        return user
     }
 }
